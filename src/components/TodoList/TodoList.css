@@ -1,0 +1,55 @@
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.todo-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.todo-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.todo-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-message {
+  text-align: center;
+  color: #adb5bd;
+  font-size: 20px;
+  padding: 60px 20px;
+  font-style: italic;
+  font-weight: 500;
+  animation: float 3s ease-in-out infinite;
+  position: relative;
+}
+
+.empty-message::before {
+  content: "📝";
+  display: block;
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
