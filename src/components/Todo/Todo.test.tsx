@@ -2,11 +2,25 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import Todo from "./Todo";
+import axios from "axios";
+
+jest.mock("axios");
 
 describe("Todo", () => {
-  test("renders todo list heading", () => {
+  beforeEach(() => {
+    (axios.get as jest.Mock).mockResolvedValue({
+      data: { todos: [{ todo: "first todo", id: 1, completed: false }] },
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("renders first todo", async () => {
     render(<Todo />);
-    expect(screen.getByText("Todo List")).toBeInTheDocument();
+    const todo = await screen.findByText("first todo");
+    expect(todo).toBeInTheDocument();
   });
 
   test("adds a new todo when add button is clicked", async () => {
@@ -52,8 +66,9 @@ describe("Todo", () => {
 
     const addButton = screen.getByRole("button", { name: /add/i });
     await user.click(addButton);
+    const todos = screen.getAllByRole("listitem");
 
-    expect(screen.getByText("No todos yet")).toBeInTheDocument();
+    expect(todos).toHaveLength(1);
   });
 
   test("does not add todos with only whitespace", async () => {
@@ -64,26 +79,9 @@ describe("Todo", () => {
     const addButton = screen.getByRole("button", { name: /add/i });
     await user.type(input, "   ");
     await user.click(addButton);
+    const todos = screen.getAllByRole("listitem");
 
-    expect(screen.getByText("No todos yet")).toBeInTheDocument();
-  });
-
-  test("deletes a todo when delete button is clicked", async () => {
-    const user = userEvent.setup();
-    render(<Todo />);
-
-    const input = screen.getByPlaceholderText("Add a new todo");
-    const addButton = screen.getByRole("button", { name: /add/i });
-    await user.type(input, "Task to delete");
-    await user.click(addButton);
-
-    expect(screen.getByText("Task to delete")).toBeInTheDocument();
-
-    const deleteButton = screen.getByRole("button", { name: /delete/i });
-    await user.click(deleteButton);
-
-    expect(screen.queryByText("Task to delete")).not.toBeInTheDocument();
-    expect(screen.getByText("No todos yet")).toBeInTheDocument();
+    expect(todos).toHaveLength(1);
   });
 
   test("adds multiple todos", async () => {
@@ -98,7 +96,7 @@ describe("Todo", () => {
     await user.click(addButton);
     await user.type(input, "Third todo");
     await user.click(addButton);
-    
+
     expect(screen.getByText("First todo")).toBeInTheDocument();
     expect(screen.getByText("Second todo")).toBeInTheDocument();
     expect(screen.getByText("Third todo")).toBeInTheDocument();
@@ -115,7 +113,7 @@ describe("Todo", () => {
     await user.type(input, "Delete this");
     await user.click(addButton);
     const deleteButtons = screen.getAllByRole("button", { name: /delete/i });
-    await user.click(deleteButtons[1]);
+    await user.click(deleteButtons[2]);
 
     expect(screen.getByText("Keep this")).toBeInTheDocument();
     expect(screen.queryByText("Delete this")).not.toBeInTheDocument();

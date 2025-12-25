@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Todo.css";
 import TodoInput from "../TodoInput/TodoInput";
 import TodoList from "../TodoList/TodoList";
 import type { TodoItemType } from "../TodoItem/TodoItem";
+import { getTodos } from "./api/getTodos";
 
 function Todo() {
   const [todos, setTodos] = useState<TodoItemType[]>([]);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const res = await getTodos();
+      const todos = res.data.todos.map((i: any) => ({ ...i, text: i.todo }));
+      setTodos(todos);
+    })();
+  }, []);
 
   const addTodo = () => {
     if (inputValue.trim() === "") return;
