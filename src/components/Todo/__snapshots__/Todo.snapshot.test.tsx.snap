@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Todo snapshot renders correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="todo-container"
+  >
+    <h2>
+      Todo List
+    </h2>
+    <div
+      class="todo-input-container"
+    >
+      <input
+        placeholder="Add a new todo"
+        type="text"
+        value=""
+      />
+      <button>
+        Add
+      </button>
+    </div>
+    <ul
+      class="todo-list"
+      data-testid="todo-list"
+    >
+      <li
+        class="todo-item"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="todo-item-text "
+        >
+          first todo
+        </span>
+        <button>
+          Delete
+        </button>
+      </li>
+    </ul>
+  </div>
+</DocumentFragment>
+`;
